@@ -1,0 +1,21 @@
+{
+  "name": "LIFE OS - Personal Master Operating System",
+  "short_name": "LIFE OS",
+  "description": "Mahir Istyaq's Personal Operating System for Academic Research, IELTS 7.5+ Hub, and Daily Chrono Focus",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#060911",
+  "theme_color": "#060911",
+  "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
