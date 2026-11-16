@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LIFE OS | মাহির ইশতিয়াক</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#060911">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LIFE OS">
+    
+    <!-- Google Fonts: Noto Serif Bengali (Typography) & JetBrains Mono (Metrics) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-base: #060911;
+            --bg-surface: rgba(15, 23, 42, 0.85);
+            --bg-surface-hover: rgba(30, 41, 59, 0.95);
+            --bg-glass: rgba(15, 23, 42, 0.72);
+            --bg-glass-card: rgba(15, 23, 42, 0.65);
+            
+            --border-subtle: rgba(255, 255, 255, 0.12);
+            --border-glow: rgba(56, 189, 248, 0.45);
+            --border-card: rgba(255, 255, 255, 0.08);
+            
+            /* High Contrast White Typography */
+            --text-main: #ffffff;
+            --text-body: #f8fafc;
+            --text-muted: #e2e8f0;
+            --text-faint: #cbd5e1;
+            
+            --accent-cyan: #38bdf8;
+            --accent-indigo: #818cf8;
+            --accent-violet: #a78bfa;
+            --accent-emerald: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-rose: #fb7185;
+            
+            --radius-xl: 22px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            
+            --shadow-card: 0 16px 44px rgba(0, 0, 0, 0.65);
+            --shadow-glow-cyan: 0 0 35px rgba(56, 189, 248, 0.25);
+            --shadow-glow-amber: 0 0 35px rgba(251, 191, 36, 0.22);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 90% 20%, rgba(129, 140, 248, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 85%, rgba(52, 211, 153, 0.08) 0%, transparent 60%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Noto Serif Bengali', serif, -apple-system;
+            font-size: 16px;
+            line-height: 1.7;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+                font-size: 15px;
+            }
+        }
+
+        /* SVG Icons Helper */
+        .icon-svg {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        .icon-svg svg {
+            width: 100%;
+            height: 100%;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* App Container */
+        .app-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Master Glass Panel */
+        .glass-panel {
+            background: var(--bg-glass-card);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            pointer-events: none;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Header HUD */
+        .header-hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 20px 24px;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar-glow {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 20px;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.45);
+            flex-shrink: 0;
+        }
+
+        .header-title h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .hud-metrics {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hud-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-subtle);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .time-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            letter-spacing: 0.5px;
+        }
+
+        /* Smart Time Nudge */
+        .time-nudge-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+            border-left: 6px solid var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding: 18px 22px;
+            border-radius: var(--radius-lg);
+        }
+
+        .nudge-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .nudge-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(56, 189, 248, 0.18);
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .nudge-text h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .nudge-text p {
+            font-size: 14.5px;
+            color: var(--text-body);
+        }
+
+        .nudge-badge {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Responsive Grid Framework */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+
+        .col-12 { grid-column: span 12; }
+        .col-8  { grid-column: span 8; }
+        .col-6  { grid-column: span 6; }
+        .col-4  { grid-column: span 4; }
+
+        @media (max-width: 1024px) {
+            .col-8, .col-6, .col-4 { grid-column: span 12; }
+        }
+
+        /* Card Section Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .section-header h2, .section-header h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* The Frog Priority Card */
+        .frog-card {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(15, 23, 42, 0.95));
+            border-left: 5px solid var(--accent-amber);
+        }
+
+        .frog-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            color: #ffffff;
+            font-family: 'Noto Serif Bengali', serif;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .frog-input:focus {
+            border-color: var(--accent-amber);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+        }
+
+        /* Task Items */
+        .task-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+        }
+
+        .task-item:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .task-checkbox {
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--accent-cyan);
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+            margin-top: 3px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .task-checkbox:checked {
+            background: var(--accent-cyan);
+        }
+
+        .task-checkbox:checked::after {
+            content: '✔';
+            color: #060911;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .task-text {
+            flex: 1;
+            color: #ffffff;
+            font-size: 15.5px;
+            line-height: 1.6;
+        }
+
+        .task-item.done .task-text {
+            text-decoration: line-through;
+            color: var(--text-faint);
+        }
+
+        /* IELTS 4-Module Bento Cards */
+        .ielts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .ielts-card {
+            background: rgba(0, 0, 0, 0.38);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            transition: all 0.25s;
+        }
+
+        .ielts-card:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(15, 23, 42, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .ielts-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .ielts-badge {
+            font-size: 12px;
+            color: var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .ielts-card h4 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .ielts-card p {
+            font-size: 14px;
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+
+        /* Interactive Band Calculator */
+        .calc-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+        }
+
+        .calc-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .calc-group label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .calc-input {
+            width: 80px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border-subtle);
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 8px 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .band-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--accent-emerald);
+            background: rgba(52, 211, 153, 0.15);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(52, 211, 153, 0.4);
+        }
+
+        /* Country Comparison Table */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 14px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14.5px;
+            color: #ffffff;
+            min-width: 600px;
+        }
+
+        .custom-table th {
+            background: rgba(30, 41, 59, 0.9);
+            color: #ffffff;
+            font-weight: 700;
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 2px solid var(--accent-cyan);
+        }
+
+        .custom-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(15, 23, 42, 0.5);
+            color: #ffffff;
+        }
+
+        .custom-table tr:hover td {
+            background: rgba(30, 41, 59, 0.65);
+        }
+
+        .badge-green {
+            background: rgba(52, 211, 153, 0.2);
+            color: #34d399;
+            border: 1px solid #10b981;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* News Feed Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 14px;
+        }
+
+        .news-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .news-card:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(15, 23, 42, 0.7);
+            transform: translateX(3px);
+        }
+
+        .news-title {
+            color: #ffffff;
+            font-size: 15.5px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-faint);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 14px;
+        }
+
+        .tool-btn {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .tool-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(56, 189, 248, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tool-icon {
+            width: 32px;
+            height: 32px;
+            color: var(--accent-cyan);
+        }
+
+        /* Buttons */
+        .btn-action {
+            background: var(--accent-cyan);
+            color: #060911;
+            font-family: 'Noto Serif Bengali', serif;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: #7dd3fc;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid var(--border-subtle);
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-family: 'Noto Serif Bengali', serif;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- Header HUD -->
+        <header class="header-hud">
+            <div class="brand-section">
+                <div class="avatar-glow">MI</div>
+                <div class="header-title">
+                    <h1>
+                        <span class="icon-svg" style="width: 24px; height: 24px; color: var(--accent-cyan);">
+                            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></svg>
+                        </span>
+                        LIFE OS: মাস্টার কমান্ড সেন্টার
+                    </h1>
+                    <p>মাহির ইশতিয়াক | সমাজবিজ্ঞান, ঢাকা কলেজ | উচ্চশিক্ষা, আইইএলটিএস ও গবেষণা হাব</p>
+                </div>
+            </div>
+
+            <div class="hud-metrics">
+                <div class="hud-pill">
+                    <span class="icon-svg" style="width: 18px; height: 18px; color: var(--accent-emerald);">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    </span>
+                    <span id="liveDate" style="color: #ffffff; font-weight: 600;">১৬ নভেম্বর ২০২৬</span>
+                </div>
+
+                <div class="hud-pill">
+                    <span class="icon-svg" style="width: 18px; height: 18px; color: var(--accent-cyan);">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </span>
+                    <span class="time-display" id="liveTime">00:00:00</span>
+                    <span style="font-size: 12px; color: var(--accent-cyan); font-weight: 700; margin-left: -4px;">BST</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Smart Time Nudge (Real-Time Synchronous Directive) -->
+        <div class="time-nudge-card">
+            <div class="nudge-content">
+                <div class="nudge-icon">
+                    <span class="icon-svg" style="width: 24px; height: 24px;">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                    </span>
+                </div>
+                <div class="nudge-text">
+                    <h3 id="nudgeTitle">স্মার্ট টাইম-নাজ ডিরেক্টিভ</h3>
+                    <p id="nudgeMessage">বর্তমান সময়ের সর্বোত্তম মনোযোগ নির্ধারণ করা হচ্ছে...</p>
+                </div>
+            </div>
+            <div class="nudge-badge" id="nudgeTimeSlot">সন্ধ্যা ৭:০০ - ৯:৩০</div>
+        </div>
+
+        <!-- Bento Grid: Priority Frog & Core Tasks -->
+        <div class="grid-layout">
+            <!-- The Frog (8 cols) -->
+            <div class="col-8" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="glass-panel frog-card">
+                    <div class="section-header" style="border-bottom-color: rgba(251, 191, 36, 0.3);">
+                        <h2>
+                            <span class="icon-svg" style="width: 22px; height: 22px; color: var(--accent-amber);">
+                                <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></svg>
+                            </span>
+                            আজকের সবচেয়ে গুরুত্বপূর্ণ মিশন (The Frog)
+                        </h2>
+                        <span class="section-badge" style="color: var(--accent-amber);">MUST COMPLETE TODAY</span>
+                    </div>
+                    <input type="text" id="frogInput" class="frog-input" value="ক্যামব্রিজ ১৭ লিসেনিং টেস্ট ১ সমাধান ও সমাজবিজ্ঞান অনার্স থিসিস মেথডোলজি ড্রাফট">
+                    <p style="font-size: 14px; color: var(--text-muted); margin-top: 10px;">
+                        <span class="icon-svg" style="width: 16px; height: 16px; color: var(--accent-amber);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></span>
+                        ব্রায়ান ট্রেসির 'ইট দ্যাট ফ্রগ' নীতি: সবচেয়ে কঠিন কাজটি আগে শেষ করলে সারাদিনের আত্মবিশ্বাস তুঙ্গে থাকে।
+                    </p>
+                </div>
+
+                <!-- Daily Tasks Checklist -->
+                <div class="glass-panel">
+                    <div class="section-header">
+                        <h2>
+                            <span class="icon-svg" style="width: 22px; height: 22px; color: var(--accent-cyan);">
+                                <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </span>
+                            দৈনিক ফোকাস ও টাস্কলিস্ট
+                        </h2>
+                        <span class="section-badge" id="taskStatsBadge">৪টি টাস্ক নির্ধারিত</span>
+                    </div>
+
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                            <div class="task-text">
+                                <strong>আইইএলটিএস ভোকাবুলারি:</strong> Academic Word List (AWL) থেকে ২০টি নতুন শব্দ ও ব্যবহার আয়ত্ত করা।
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                            <div class="task-text">
+                                <strong>জার্মানি ও কানাডার সোশ্যাল সায়েন্স প্রোগ্রাম:</strong> ডিএএডি (DAAD) ও অটোয়া বিশ্ববিদ্যালয়ের মাস্টার্স রিকোয়ারমেন্ট নোট করা।
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                            <div class="task-text">
+                                <strong>সমাজবিজ্ঞান অনার্স গবেষণা:</strong> ঢাকা কলেজের অনার্স থিসিসের জন্য কোয়ান্টিটেটিভ ও কোয়ালিটেটিভ মেথডোলজি খসড়া তৈরি।
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                            <div class="task-text">
+                                <strong>মেস ম্যানেজার পিডব্লিউএ (Mess Manager):</strong> নতুন আপডেট ডিপ্লয় এবং মান্থলি এক্সপেন্স মডিউল টেস্ট সম্পন্ন করা।
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sociology Thinker Card (4 cols) -->
+            <div class="col-4">
+                <div class="glass-panel" style="height: 100%; border-left: 5px solid var(--accent-violet);">
+                    <div class="section-header">
+                        <h3>
+                            <span class="icon-svg" style="width: 22px; height: 22px; color: var(--accent-violet);">
+                                <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            </span>
+                            আজকের সমাজবিজ্ঞান ভাবনা
+                        </h3>
+                        <span class="section-badge" style="color: var(--accent-violet);">DURKHEIM</span>
+                    </div>
+                    <div style="font-size: 15.5px; color: #ffffff; line-height: 1.7;">
+                        <h4 style="font-size: 17px; color: var(--accent-cyan); margin-bottom: 6px;">অ্যানোমি ও সামাজিক সংহতি (Anomie & Social Solidarity)</h4>
+                        <p style="margin-bottom: 12px; color: var(--text-body);">
+                            এমিল ডুর্খেইমের মতে, সমাজে যখন নৈতিক নিয়মকানুন বা সামাজিক মূলবোধের বাঁধন দুর্বল হয়ে পড়ে, তখন মানুষের মধ্যে বিচ্ছিন্নতাবোধ ও দিকভ্রান্তি তৈরি হয়, যাকে 'অ্যানোমি' বলা হয়।
+                        </p>
+                        <div style="background: rgba(0, 0, 0, 0.35); padding: 12px; border-radius: 8px; border: 1px solid var(--border-subtle); font-size: 14px; color: var(--text-muted);">
+                            💡 <strong>গবেষণায় প্রয়োগ:</strong> বর্তমান ডিজিটাল যুগে সোশ্যাল মিডিয়ার প্রভাব এবং তরুণ প্রজন্মের বিচ্ছিন্নতাবোধ বিশ্লেষণে এই তত্ত্বটি অত্যন্ত কার্যকর।
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DEDICATED IELTS MASTER HUB -->
+        <div class="glass-panel" style="border: 1px solid rgba(56, 189, 248, 0.35);">
+            <div class="section-header">
+                <h2>
+                    <span class="icon-svg" style="width: 24px; height: 24px; color: var(--accent-cyan);">
+                        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    </span>
+                    আইইএলটিএস (IELTS Academic) ব্যান্ড ৭.৫+ মাস্টারহাব
+                </h2>
+                <span class="section-badge" style="color: var(--accent-emerald);">TARGET: BAND 7.5+</span>
+            </div>
+
+            <p style="font-size: 15.5px; color: var(--text-body); margin-bottom: 20px;">
+                বিদেশে ফান্ডেড উচ্চশিক্ষার জন্য একাডেমিক আইইএলটিএস-এর ৪টি মূল মডিউল, লাইভ স্কোর ক্যালকুলেটর ও ৯০ দিনের রোডম্যাপ:
+            </p>
+
+            <!-- 4 Modules -->
+            <div class="ielts-grid">
+                <div class="ielts-card">
+                    <div class="ielts-card-top">
+                        <h4>১. লিসেনিং (Listening)</h4>
+                        <span class="ielts-badge">৪০ প্রশ্ন | ৩০ মি.</span>
+                    </div>
+                    <p>৪টি সেকশন। অডিও মাত্র ১ বার বাজবে। প্রধান কৌশল: বানান নির্ভুল রাখা, একবচন/বহুবচন (-s/-es) লক্ষ্য করা এবং প্রশ্ন আগে স্ক্যান করা।</p>
+                </div>
+
+                <div class="ielts-card">
+                    <div class="ielts-card-top">
+                        <h4>২. রিডিং (Reading)</h4>
+                        <span class="ielts-badge">৪০ প্রশ্ন | ৬০ মি.</span>
+                    </div>
+                    <p>৩টি অ্যাকাডেমিক প্যাসেজ। স্কিমিং ও স্ক্যানিং দক্ষতা মূল। ট্র্যাপ: True/False/Not Given-এ টেক্সটের বাইরের সাধারণ যুক্তি ব্যবহার না করা।</p>
+                </div>
+
+                <div class="ielts-card">
+                    <div class="ielts-card-top">
+                        <h4>৩. রাইটিং (Writing)</h4>
+                        <span class="ielts-badge">২টি টাস্ক | ৬০ মি.</span>
+                    </div>
+                    <p>টাস্ক ১: গ্রাফ/চার্ট বিশ্লেষণ (১৫০ শব্দ, ওভারভিউ বাধ্যতামূলক)। টাস্ক ২: অ্যাকাডেমিক রচনা (২৫০ শব্দ, স্পষ্ট থিসিস ও প্যারাগ্রাফিং)।</p>
+                </div>
+
+                <div class="ielts-card">
+                    <div class="ielts-card-top">
+                        <h4>৪. স্পিকিং (Speaking)</h4>
+                        <span class="ielts-badge">৩ পার্ট | ১১-১৪ মি.</span>
+                    </div>
+                    <p>পার্ট ১: ইন্টারভিউ, পার্ট ২: কিউ-কার্ড (২ মিনিট একটানা কথা বলা), পার্ট ৩: গভীর সামাজিক বিতর্ক। ফ্লুয়েন্সি ও স্পষ্ট উচ্চারণে জোর দিন।</p>
+                </div>
+            </div>
+
+            <!-- Band Calculator -->
+            <div class="calc-box">
+                <div class="calc-group">
+                    <label>লিসেনিং সঠিক উত্তর (/৪০):</label>
+                    <input type="number" id="calcListenIn" class="calc-input" min="0" max="40" value="33" oninput="calcBand()">
+                    <span id="calcListenOut" class="band-tag">Band 7.5</span>
+                </div>
+
+                <div class="calc-group">
+                    <label>রিডিং সঠিক উত্তর (/৪০):</label>
+                    <input type="number" id="calcReadIn" class="calc-input" min="0" max="40" value="31" oninput="calcBand()">
+                    <span id="calcReadOut" class="band-tag">Band 7.0</span>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 16px; font-weight: 700; color: #ffffff;">প্রাক্কলিত গড় ব্যান্ড:</span>
+                    <span id="calcOverallOut" style="font-family: 'JetBrains Mono'; font-size: 26px; font-weight: 800; color: var(--accent-cyan); background: rgba(56, 189, 248, 0.15); padding: 4px 14px; border-radius: 8px;">7.5</span>
+                </div>
+            </div>
+
+            <!-- Free Official Links -->
+            <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px;">
+                <a href="https://takeielts.britishcouncil.org/prepare/ielts-free-practice-mock-tests" target="_blank" class="btn-action">
+                    ব্রিটিশ কাউন্সিল ফ্রি অফিসিয়াল মক টেস্ট
+                </a>
+                <a href="https://ieltsliz.com/" target="_blank" class="btn-secondary">
+                    আইইএলটিএস লিজ (IELTS Liz) ফ্রি টিউটোরিয়াল
+                </a>
+                <a href="https://www.bbc.co.uk/learningenglish/english/features/6-minute-english" target="_blank" class="btn-secondary">
+                    বিবিসি ৬-মিনিট ইংলিশ লিসেনিং
+                </a>
+            </div>
+        </div>
+
+        <!-- GLOBAL HIGHER STUDY COUNTRY ANALYZER -->
+        <div class="glass-panel" style="border-left: 5px solid var(--accent-emerald);">
+            <div class="section-header">
+                <h2>
+                    <span class="icon-svg" style="width: 24px; height: 24px; color: var(--accent-emerald);">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </span>
+                    সমাজবিজ্ঞান ও সোশ্যাল সায়েন্সে দেশ নির্বাচন অ্যানালাইজার
+                </h2>
+                <span class="section-badge" style="color: var(--accent-emerald);">STUDY ABROAD STRATEGY</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>দেশ (Country)</th>
+                            <th>টিউশন ফি</th>
+                            <th>বার্ষিক খরচ / ব্লকড একাউন্ট</th>
+                            <th>IELTS রিকোয়ারমেন্ট</th>
+                            <th>পোস্ট-স্টাডি ওয়ার্ক পারমিট (PSW)</th>
+                            <th>ফান্ডেড স্কলারশিপ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>জার্মানি (Germany)</strong></td>
+                            <td><span class="badge-green">১০০% ফ্রি (€০)</span></td>
+                            <td>~€১১,৯২৮ (ব্লকড)</td>
+                            <td>Overall 6.5 (min 6.0)</td>
+                            <td>১৮ মাস</td>
+                            <td>DAAD Helmut-Schmidt, EPOS</td>
+                        </tr>
+                        <tr>
+                            <td><strong>কানাডা (Canada)</strong></td>
+                            <td>$১৮k-$৩৫k CAD</td>
+                            <td>~$২০,৬৩৫ CAD</td>
+                            <td>Overall 6.5 - 7.0</td>
+                            <td>সর্বোচ্চ ৩ বছর (PGWP)</td>
+                            <td>থিসিস মাস্টার্সে TA/RA</td>
+                        </tr>
+                        <tr>
+                            <td><strong>যুক্তরাজ্য (UK)</strong></td>
+                            <td>£১৮k-£৩২k (১ বছর)</td>
+                            <td>~£১২k-£১৬k</td>
+                            <td>Overall 6.5 - 7.5</td>
+                            <td>২ বছর (Graduate Route)</td>
+                            <td>Chevening, Commonwealth</td>
+                        </tr>
+                        <tr>
+                            <td><strong>যুক্তরাষ্ট্র (USA)</strong></td>
+                            <td><span class="badge-green">১০০% ফুল ফান্ডেড</span></td>
+                            <td>মাসিক স্টাইপেন ($১.৫k-$২.৮k)</td>
+                            <td>Overall 7.0 - 7.5</td>
+                            <td>১-৩ বছর (STEM Social)</td>
+                            <td>Direct PhD / Full GA/TA/RA</td>
+                        </tr>
+                        <tr>
+                            <td><strong>সুইডেন / ইইউ</strong></td>
+                            <td>ফুল স্কলারশিপ ওয়েভার</td>
+                            <td>মাসিক স্টাইপেন</td>
+                            <td>Overall 6.5 - 7.0</td>
+                            <td>১২ মাস</td>
+                            <td>Swedish Institute (SI), Erasmus Mundus</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- LIVE NEWS PREVIEW ENGINE -->
+        <div class="glass-panel">
+            <div class="section-header">
+                <h2>
+                    <span class="icon-svg" style="width: 24px; height: 24px; color: var(--accent-cyan);">
+                        <svg viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                    </span>
+                    প্রতিদিনের লাইভ নিউজ প্রিভিউ (অটো-আপডেট)
+                </h2>
+                <span class="section-badge">LIVE GOOGLE NEWS SYNC</span>
+            </div>
+
+            <div class="news-grid">
+                <a href="https://news.google.com/search?q=Higher+Education+Bangladesh" target="_blank" class="news-card">
+                    <div class="news-title">উচ্চশিক্ষায় আন্তর্জাতিক স্কলারশিপের নতুন সার্কুলার: ইউরোপ ও কমনওয়েলথ সুযোগ বৃদ্ধি</div>
+                    <div class="news-meta">
+                        <span style="color: var(--accent-cyan);">বিডিনিউজ২৪</span>
+                        <span>আজকের আপডেট</span>
+                    </div>
+                </a>
+
+                <a href="https://news.google.com/search?q=Germany+Student+Visa" target="_blank" class="news-card">
+                    <div class="news-title">জার্মানিতে দক্ষ কর্মী ও আন্তর্জাতিক শিক্ষার্থীদের জন্য নতুন ইমিগ্রেশন ও ভিসা সুবিধা কার্যকর</div>
+                    <div class="news-meta">
+                        <span style="color: var(--accent-cyan);">ডয়চে ভেলে বাংলা</span>
+                        <span>আজকের আপডেট</span>
+                    </div>
+                </a>
+
+                <a href="https://news.google.com/search?q=Canada+PGWP+Masters" target="_blank" class="news-card">
+                    <div class="news-title">কানাডায় মাস্টার্স গ্র্যাজুয়েটদের জন্য ৩ বছরের পোস্ট-গ্র্যাজুয়েশন ওয়ার্ক পারমিটের নতুন নিয়ম</div>
+                    <div class="news-meta">
+                        <span style="color: var(--accent-cyan);">রয়টার্স ওয়ার্ল্ড</span>
+                        <span>আজকের আপডেট</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- INTEGRATED TOOLS -->
+        <div class="glass-panel">
+            <div class="section-header">
+                <h2>
+                    <span class="icon-svg" style="width: 24px; height: 24px; color: var(--accent-emerald);">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    </span>
+                    সংযুক্ত টুলস ও অটোমেশন স্যুট
+                </h2>
+                <span class="section-badge">১০টি প্লাগইন কানেক্টেড</span>
+            </div>
+
+            <div class="tools-grid">
+                <a href="https://drive.google.com/" target="_blank" class="tool-btn">
+                    <span class="tool-icon"><svg viewBox="0 0 24 24"><path d="M22 15V9L12 3 2 9v6l10 6z"></path></svg></span>
+                    <span>Google Drive</span>
+                </a>
+                <a href="https://docs.google.com/" target="_blank" class="tool-btn">
+                    <span class="tool-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg></span>
+                    <span>Google Docs</span>
+                </a>
+                <a href="https://sheets.google.com/" target="_blank" class="tool-btn">
+                    <span class="tool-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect></svg></span>
+                    <span>Google Sheets</span>
+                </a>
+                <a href="https://zapier.com/" target="_blank" class="tool-btn">
+                    <span class="tool-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></svg></span>
+                    <span>Zapier MCP</span>
+                </a>
+                <a href="https://www.figma.com/" target="_blank" class="tool-btn">
+                    <span class="tool-icon"><svg viewBox="0 0 24 24"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"></path></svg></span>
+                    <span>Figma MCP</span>
+                </a>
+                <a href="https://www.canva.com/" target="_blank" class="tool-btn">
+                    <span class="tool-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle></svg></span>
+                    <span>Canva Pro</span>
+                </a>
+                <a href="https://ai.google.dev/" target="_blank" class="tool-btn">
+                    <span class="tool-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"></path></svg></span>
+                    <span>Gemini AI</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Live Script: Real-Time Clock, Nudge, Band Calculator & PWA Service Worker -->
+    <script>
+        function updateLiveClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('liveTime').innerText = `${h}:${m}:${s}`;
+
+            const bMonths = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+            const bNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+            const toB = num => String(num).split('').map(d => bNums[d] || d).join('');
+            
+            document.getElementById('liveDate').innerText = `${toB(now.getDate())} ${bMonths[now.getMonth()]} ${toB(now.getFullYear())}`;
+
+            // Smart Nudge
+            const hour = now.getHours();
+            const nudgeT = document.getElementById('nudgeTitle');
+            const nudgeM = document.getElementById('nudgeMessage');
+            const nudgeS = document.getElementById('nudgeTimeSlot');
+
+            if (hour >= 6 && hour < 8) {
+                nudgeT.innerText = 'সকালের ব্রেন অ্যাক্টিভেশন ও ওয়ার্কআউট';
+                nudgeM.innerText = 'হালকা ব্যায়াম, সকালের নাস্তা এবং রিডিং সেশন সম্পন্ন করুন।';
+                nudgeS.innerText = 'সকাল ৬:৩০ - ৮:০০';
+            } else if (hour >= 8 && hour < 14) {
+                nudgeT.innerText = 'অ্যাকাডেমিক ফোকাস জোন (ঢাকা কলেজ)';
+                nudgeM.innerText = 'সমাজবিজ্ঞান অনার্স ক্লাস ও গবেষণার কাজে মনোনিবেশ করুন।';
+                nudgeS.innerText = 'সকাল ৮:৩০ - দুপুর ১:৩০';
+            } else if (hour >= 14 && hour < 16) {
+                nudgeT.innerText = 'মধ্যাহ্নভোজ ও রিচার্জ (Power Nap)';
+                nudgeM.innerText = 'পুষ্টিকর লাঞ্চ শেষ করে ২০-৩০ মিনিটের বিশ্রাম নিন।';
+                nudgeS.innerText = 'দুপুর ২:০০ - ৩:৩০';
+            } else if (hour >= 16 && hour < 19) {
+                nudgeT.innerText = 'প্রোডাক্ট ও কোডিং ল্যাব (Mess Manager)';
+                nudgeM.innerText = 'মেস ম্যানেজার পিডব্লিউএ-এর ইউআই বা ফিচার ডেভেলপমেন্টের আদর্শ সময়।';
+                nudgeS.innerText = 'বিকেল ৪:০০ - ৬:৩০';
+            } else if (hour >= 19 && hour < 22) {
+                nudgeT.innerText = 'আইইএলটিএস মাস্টার প্র্যাকটিস সেশন';
+                nudgeM.innerText = 'ক্যামব্রিজ টেস্টের লিসেনিং/রিডিং সলভ করুন এবং কিউ-কার্ড স্পিকিং অনুশীলন করুন।';
+                nudgeS.innerText = 'সন্ধ্যা ৭:০০ - রাত ৯:৩০';
+            } else {
+                nudgeT.innerText = 'রিফ্লেকশন ও শান্তির ঘুম';
+                nudgeM.innerText = 'দিনের কাজের মূল্যায়ন করে আরামদায়ক ঘুমের প্রস্তুতি নিন।';
+                nudgeS.innerText = 'রাত ১০:০০ - ভোর ৬:০০';
+            }
+        }
+
+        function toggleTask(checkbox) {
+            const item = checkbox.closest('.task-item');
+            if (checkbox.checked) {
+                item.classList.add('done');
+            } else {
+                item.classList.remove('done');
+            }
+            const total = document.querySelectorAll('.task-item').length;
+            const done = document.querySelectorAll('.task-item.done').length;
+            document.getElementById('taskStatsBadge').innerText = `${done}/${total} সম্পন্ন (${Math.round((done/total)*100)}%)`;
+        }
+
+        function calcBand() {
+            const l = parseInt(document.getElementById('calcListenIn').value) || 0;
+            const r = parseInt(document.getElementById('calcReadIn').value) || 0;
+            function toBand(s) {
+                if (s >= 39) return 9.0;
+                if (s >= 37) return 8.5;
+                if (s >= 35) return 8.0;
+                if (s >= 32) return 7.5;
+                if (s >= 30) return 7.0;
+                if (s >= 26) return 6.5;
+                if (s >= 23) return 6.0;
+                if (s >= 18) return 5.5;
+                if (s >= 16) return 5.0;
+                return 4.5;
+            }
+            const bL = toBand(l);
+            const bR = toBand(r);
+            document.getElementById('calcListenOut').innerText = 'Band ' + bL.toFixed(1);
+            document.getElementById('calcReadOut').innerText = 'Band ' + bR.toFixed(1);
+            const avg = (bL + bR + 7.0 + 7.0) / 4;
+            const rounded = Math.round(avg * 2) / 2;
+            document.getElementById('calcOverallOut').innerText = rounded.toFixed(1);
+        }
+
+        setInterval(updateLiveClock, 1000);
+        updateLiveClock();
+        calcBand();
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
+</body>
+</html>
